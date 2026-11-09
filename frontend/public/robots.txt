@@ -7,3 +7,4 @@ Disallow: /login
 
 # Sitemap
 Sitemap: https://mahalaxmilawn.com/sitemap.xml
+
