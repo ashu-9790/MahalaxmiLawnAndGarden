@@ -1,0 +1,268 @@
+<main class="home-main" (click)="closeDropdown()">
+  <!-- Hero Section -->
+  <section class="hero-section" id="hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content text-center">
+      <span class="hero-badge" data-aos="fade-down">{{ ts.t().hero_badge }}</span>
+      <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">{{ ts.t().title }}</h1>
+      <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">{{ ts.t().subtitle }}</p>
+      <div class="hero-ctas" data-aos="zoom-in" data-aos-delay="300">
+        <button (click)="modalService.openContactModal()" class="btn btn-primary" style="cursor: pointer;">{{ ts.t().form_title }}</button>
+        <a href="#services" class="btn btn-secondary">{{ ts.t().services_title }}</a>
+        @if (safeYoutubeUrl()) {
+          <button class="btn btn-video" (click)="openVideoModal()">
+            ▶ {{ ts.t().btn_watch_video }}
+          </button>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Question / Intro Section -->
+  <section class="intro-section">
+    <div class="container text-center">
+      <h2 class="question-title" data-aos="fade-up">{{ ts.t().question }}</h2>
+      <p class="intro-desc" data-aos="fade-up" data-aos-delay="150">
+        {{ ts.t().bottom_note_1 }}
+      </p>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services-section" id="services">
+    <div class="container">
+      <div class="section-header text-center">
+        <h2 class="section-title gradient-text" data-aos="fade-up">{{ ts.t().services_title }}</h2>
+        <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">{{ ts.t().bottom_note_2 }}</p>
+      </div>
+
+      <div class="services-grid">
+        @for (service of ts.t().services; track service.id; let i = $index) {
+          <div class="service-card" (click)="serviceType.set(service.title); contactForm.scrollIntoView({ behavior: 'smooth' })" data-aos="fade-up" [attr.data-aos-delay]="(i % 3) * 150">
+            <div class="service-icon-wrapper">
+              <span class="service-icon">{{ service.icon }}</span>
+            </div>
+            <h3 class="service-name">{{ service.title }}</h3>
+            <p class="service-desc">{{ service.desc }}</p>
+            <span class="service-action-hint">Inquire Now &rarr;</span>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Photo Gallery Section -->
+  <section id="gallery" class="gallery-section">
+    <div class="container">
+      <h2 class="section-title text-center" data-aos="fade-up">Our Work</h2>
+      <p class="section-subtitle text-center" data-aos="fade-up" data-aos-delay="100">
+        Browse through our recent landscaping and garden transformations.
+      </p>
+
+      @if (transformations().length > 0) {
+        <div class="public-gallery-grid">
+          @for (image of transformations(); track image._id) {
+            <div class="gallery-item dual-public-card" data-aos="zoom-in" data-aos-delay="150" (click)="openLightbox(image)">
+              <div class="dual-public-container">
+                <div class="public-img-half">
+                  <span class="public-img-label">Before</span>
+                  <img [src]="image.beforeImageUrl" alt="Before Transformation" class="gallery-image">
+                </div>
+                <div class="public-img-half">
+                  <span class="public-img-label">After</span>
+                  <img [src]="image.afterImageUrl" alt="After Transformation" class="gallery-image">
+                </div>
+              </div>
+              <div class="gallery-overlay">
+                <span class="gallery-item-title">{{ image.title }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-gallery text-center" data-aos="fade-up">
+          <p>More beautiful transformations coming soon!</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Contact / Inquiry Form Section -->
+  <section class="contact-section" id="contact" #contactForm>
+    <div class="container contact-container">
+      <div class="contact-info-card" data-aos="fade-right">
+        <h2 class="contact-title">{{ ts.t().cta_contact }}</h2>
+        <p class="contact-subtitle">{{ ts.t().cta_sub }}</p>
+        
+        <div class="contact-details">
+          <div class="contact-item">
+            <span class="contact-icon">👤</span>
+            <div class="contact-text">
+              <span class="label">Representative</span>
+              <span class="value">{{ ts.t().owner_name }}</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📞</span>
+            <div class="contact-text">
+              <span class="label">Call Directly</span>
+              <a [href]="'tel:' + ts.t().phone_raw" class="contact-phone">{{ ts.t().phone }}</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="decor-leaf">🌿</div>
+      </div>
+
+      <div class="contact-form-card" data-aos="fade-left">
+        <h3 class="form-title">{{ ts.t().form_title }}</h3>
+        
+        <form (ngSubmit)="onSubmit()" #f="ngForm" class="inquiry-form">
+          <div class="form-group">
+            <label for="name">{{ ts.t().form_name }} *</label>
+            <input 
+              type="text" 
+              id="name" 
+              name="name" 
+              required
+              [placeholder]="ts.t().form_name"
+              [ngModel]="name()" 
+              (ngModelChange)="name.set($event)"
+              #nameInput="ngModel">
+            @if (nameInput.invalid && (nameInput.dirty || nameInput.touched)) {
+              <span class="error-text">{{ ts.t().err_name_req }}</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="phone">{{ ts.t().form_phone }} *</label>
+            <input 
+              type="tel" 
+              id="phone" 
+              name="phone" 
+              required
+              pattern="[0-9]{10}"
+              minlength="10"
+              maxlength="10"
+              [placeholder]="ts.t().form_phone"
+              [ngModel]="phone()" 
+              (ngModelChange)="phone.set($event)"
+              #phoneInput="ngModel">
+            @if (phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)) {
+              @if (phoneInput.errors?.['required']) {
+                <span class="error-text">{{ ts.t().err_phone_req }}</span>
+              }
+              @if (phoneInput.errors?.['pattern'] || phoneInput.errors?.['minlength']) {
+                <span class="error-text">{{ ts.t().err_phone_10 }}</span>
+              }
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="email">{{ ts.t().form_email }}</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email"
+              email
+              [placeholder]="ts.t().form_email"
+              [ngModel]="email()" 
+              (ngModelChange)="email.set($event)"
+              #emailInput="ngModel">
+            @if (emailInput.invalid && (emailInput.dirty || emailInput.touched)) {
+              <span class="error-text">{{ ts.t().err_email_invalid }}</span>
+            }
+          </div>
+
+          <div class="form-group custom-select-group">
+            <label for="serviceType">{{ ts.t().form_service }} *</label>
+            <div class="custom-select-wrapper" (click)="toggleDropdown($event)">
+              <div class="custom-select-trigger" [class.active]="isDropdownOpen()">
+                <span>{{ serviceType() || ts.t().form_service }}</span>
+                <span class="dropdown-arrow"></span>
+              </div>
+              
+              @if (isDropdownOpen()) {
+                <div class="custom-options-container">
+                  @for (service of ts.t().services; track service.id) {
+                    <div 
+                      class="custom-option" 
+                      [class.selected]="serviceType() === service.title"
+                      (click)="selectService(service.title); $event.stopPropagation()">
+                      {{ service.title }}
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+            <input type="hidden" name="serviceType" [ngModel]="serviceType()" required #serviceInput="ngModel">
+            @if (serviceInput.invalid && (serviceInput.dirty || serviceInput.touched)) {
+              <span class="error-text">{{ ts.t().err_service_req }}</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="message">{{ ts.t().form_message }}</label>
+            <textarea 
+              id="message" 
+              name="message" 
+              rows="3"
+              [placeholder]="ts.t().form_message"
+              [ngModel]="message()" 
+              (ngModelChange)="message.set($event)"></textarea>
+          </div>
+
+          <button 
+            type="submit" 
+            class="submit-btn" 
+            [disabled]="f.invalid || isSubmitting()">
+            @if (isSubmitting()) {
+              <span>Submitting...</span>
+            } @else {
+              <span>{{ ts.t().form_submit }}</span>
+            }
+          </button>
+        </form>
+
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Lightbox Modal -->
+@if (selectedGalleryImage()) {
+  <div class="lightbox-overlay" (click)="closeLightbox()">
+    <div class="lightbox-container" (click)="$event.stopPropagation()">
+      <button class="lightbox-close" (click)="closeLightbox()">&times;</button>
+      <h3 class="lightbox-title">{{ selectedGalleryImage().title }}</h3>
+      <div class="lightbox-content dual-public-container">
+        <div class="public-img-half">
+          <span class="public-img-label">Before</span>
+          <img [src]="selectedGalleryImage().beforeImageUrl" alt="Before" class="gallery-image">
+        </div>
+        <div class="public-img-half">
+          <span class="public-img-label">After</span>
+          <img [src]="selectedGalleryImage().afterImageUrl" alt="After" class="gallery-image">
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Video Modal -->
+@if (isVideoModalOpen() && safeYoutubeUrl()) {
+  <div class="lightbox-overlay" (click)="closeVideoModal()">
+    <div class="lightbox-container video-lightbox" (click)="$event.stopPropagation()">
+      <button class="lightbox-close" (click)="closeVideoModal()">&times;</button>
+      <div class="video-wrapper">
+        <iframe 
+          [src]="safeYoutubeUrl()" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+}

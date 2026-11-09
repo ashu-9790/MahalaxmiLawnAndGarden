@@ -1,0 +1,407 @@
+<div class="admin-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="admin-header">
+      <div>
+        <div>
+          <h1 style="margin: 0; line-height: 1;">Dashboard</h1>
+        </div>
+        <p class="subtitle">Manage Customer Inquiries & Gallery</p>
+      </div>
+      <div class="header-actions">
+        <button (click)="fetchInquiries()" class="refresh-btn">🔄 Refresh</button>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="admin-tabs">
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab() === 'stats'"
+        (click)="setTab('stats')">
+        📈 Site Stats
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab() === 'inquiries'"
+        (click)="setTab('inquiries')">
+        📋 Customer Inquiries
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab() === 'transformations'" 
+        (click)="activeTab.set('transformations')">
+        📸 Before & After
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab() === 'single-photos'" 
+        (click)="setTab('single-photos')">
+        🖼️ Single Photos
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab() === 'site-settings'" 
+        (click)="setTab('site-settings')">
+        ⚙️ Site Settings
+      </button>
+    </div>
+
+      <!-- STATS TAB -->
+      @if (activeTab() === 'stats') {
+        <div class="admin-tab-content fade-in">
+          <div class="admin-header-actions" style="margin-bottom: 2rem;">
+            <h2>Visitor Statistics</h2>
+            <p class="subtitle text-muted">Track how many people are viewing your website.</p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-icon" style="background-color: #e8f4f8;">👥</span>
+              <div class="stat-info">
+                <h3>Total Visitors (All Time)</h3>
+                <p class="stat-value" style="color: var(--color-primary-dark);">{{ totalVisits() }}</p>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <span class="stat-icon" style="background-color: #fff4e6;">📅</span>
+              <div class="stat-info">
+                <h3>Today's Visitors</h3>
+                <p class="stat-value" style="color: var(--color-secondary-dark);">{{ todayVisits() }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- INQUIRIES TAB -->
+      @if (activeTab() === 'inquiries') {
+        <!-- Stats Grid -->
+        <div class="stats-grid" style="margin-bottom: 2rem;">
+          <div class="stat-card">
+            <span class="stat-icon">📋</span>
+            <div class="stat-info">
+              <h3>Total</h3>
+              <p class="stat-value">{{ totalCount() }}</p>
+            </div>
+          </div>
+          <div class="stat-card pending">
+            <span class="stat-icon">⏳</span>
+            <div class="stat-info">
+              <h3>Pending</h3>
+              <p class="stat-value">{{ pendingCount() }}</p>
+            </div>
+          </div>
+          <div class="stat-card reviewed">
+            <span class="stat-icon">🔍</span>
+            <div class="stat-info">
+              <h3>Reviewed</h3>
+              <p class="stat-value">{{ reviewedCount() }}</p>
+            </div>
+          </div>
+          <div class="stat-card contacted">
+            <span class="stat-icon">✅</span>
+            <div class="stat-info">
+              <h3>Contacted</h3>
+              <p class="stat-value">{{ contactedCount() }}</p>
+            </div>
+          </div>
+        </div>
+        
+        @if (isLoading()) {
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading inquiries...</p>
+          </div>
+        } @else if (errorMessage()) {
+          <div class="error-state">
+            <p class="error-msg">⚠️ {{ errorMessage() }}</p>
+            <button (click)="fetchInquiries()" class="btn btn-primary">Try Again</button>
+          </div>
+        } @else if (inquiries().length === 0) {
+          <div class="empty-state">
+            <span class="empty-icon">🍃</span>
+            <p>No inquiries found. When customers submit requests, they will appear here.</p>
+          </div>
+        } @else {
+          <div class="table-wrapper">
+            <table class="inquiry-table">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Service Needed</th>
+                  <th>Message</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (inquiry of inquiries(); track inquiry._id) {
+                  <tr class="inquiry-row" [class]="inquiry.status.toLowerCase()">
+                    <!-- Customer Details -->
+                    <td>
+                      <div class="customer-info">
+                        <span class="customer-name">{{ inquiry.name }}</span>
+                        <a [href]="'tel:' + inquiry.phone" class="customer-phone">📞 {{ inquiry.phone }}</a>
+                        @if (inquiry.email) {
+                          <span class="customer-email">✉️ {{ inquiry.email }}</span>
+                        }
+                      </div>
+                    </td>
+                    
+                    <!-- Service -->
+                    <td>
+                      <span class="service-tag">{{ inquiry.serviceType }}</span>
+                    </td>
+
+                    <!-- Message -->
+                    <td>
+                      <p class="message-text" [title]="inquiry.message || ''">
+                        {{ inquiry.message || 'No message provided.' }}
+                      </p>
+                    </td>
+
+                    <!-- Date -->
+                    <td>
+                      <span class="date-text">{{ inquiry.createdAt | date:'short' }}</span>
+                    </td>
+
+                    <!-- Status -->
+                    <td>
+                      <div class="status-selector">
+                        <select 
+                          [value]="inquiry.status"
+                          (change)="updateStatus(inquiry._id, statusSelect.value)"
+                          #statusSelect
+                          class="status-dropdown"
+                          [class]="inquiry.status.toLowerCase()">
+                          <option value="Pending">⏳ Pending</option>
+                          <option value="Reviewed">🔍 Reviewed</option>
+                          <option value="Contacted">✅ Contacted</option>
+                        </select>
+                      </div>
+                    </td>
+
+                    <!-- Actions -->
+                    <td>
+                      <button 
+                        (click)="deleteInquiry(inquiry._id)" 
+                        class="delete-btn" 
+                        title="Delete Inquiry">
+                        🗑️
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      }
+
+      <!-- TRANSFORMATIONS TAB -->
+      @if (activeTab() === 'transformations') {
+        <div class="gallery-management">
+          
+          <!-- Upload Section -->
+          <div class="upload-section">
+            <h3>Upload Before & After Transformation</h3>
+            <p class="limit-text text-muted" style="margin-bottom:1rem;">(Limit: 5 transformations maximum on Home page)</p>
+            <div class="upload-form">
+              <input 
+                type="text" 
+                placeholder="Transformation Title (e.g. Front Yard Cleanup)" 
+                class="form-control"
+                [value]="uploadTitle()"
+                (input)="updateUploadTitle($event)"
+                style="flex: 100%; margin-bottom: 1rem;"
+              >
+              
+              <div class="file-input-group">
+                <label>Before Photo:</label>
+                <input 
+                  type="file" 
+                  accept="image/*"
+                  (change)="onBeforeFileSelected($event)"
+                  #beforeInput
+                  class="file-input"
+                >
+              </div>
+
+              <div class="file-input-group">
+                <label>After Photo:</label>
+                <input 
+                  type="file" 
+                  accept="image/*"
+                  (change)="onAfterFileSelected($event)"
+                  #afterInput
+                  class="file-input"
+                >
+              </div>
+
+              <button 
+                class="btn btn-primary upload-btn" 
+                (click)="uploadTransformation(beforeInput, afterInput)"
+                [disabled]="!beforeFile() || !afterFile() || isUploading()">
+                @if (isUploading()) {
+                  <span>Uploading...</span>
+                } @else {
+                  <span>📤 Upload Transformation</span>
+                }
+              </button>
+            </div>
+          </div>
+
+        <div class="admin-gallery-section">
+          <h3>Manage Transformations</h3>
+          <div class="admin-gallery-grid">
+            @if (transformations().length === 0) {
+              <div class="empty-state text-center">
+                <p>No transformations found. Upload your first one above!</p>
+              </div>
+            } @else {
+              @for (image of transformations(); track image._id) {
+                <div class="gallery-card dual-card">
+                  <div class="gallery-img-container dual-container">
+                    <div class="img-half">
+                      <span class="img-label">Before</span>
+                      <img [src]="image.beforeImageUrl" alt="Before" class="gallery-img">
+                    </div>
+                    <div class="img-half">
+                      <span class="img-label">After</span>
+                      <img [src]="image.afterImageUrl" alt="After" class="gallery-img">
+                    </div>
+                  </div>
+                  <div class="gallery-card-footer">
+                    <span class="gallery-title">{{ image.title || 'Untitled' }}</span>
+                    <button 
+                      (click)="deleteGalleryImage(image._id)" 
+                      class="delete-btn" 
+                      title="Delete Image">
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Single Photos Tab Content -->
+    @if (activeTab() === 'single-photos') {
+      <div class="admin-tab-content fade-in">
+        <div class="admin-header-actions">
+          <h2>Single Photos (Portfolio)</h2>
+          <button class="btn btn-secondary" (click)="fetchGallery()" [disabled]="isLoading()">
+            🔄 Refresh
+          </button>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+          <h3>Upload Single Photo</h3>
+          <p class="limit-text text-muted" style="margin-bottom:1rem;">(Limit: 30 photos maximum on Gallery page)</p>
+          <div class="upload-form">
+            <input 
+              type="text" 
+              placeholder="Photo Title" 
+              class="form-control"
+              [value]="uploadTitle()"
+              (input)="updateUploadTitle($event)"
+              style="flex: 100%; margin-bottom: 1rem;"
+            >
+            
+            <div class="file-input-group">
+              <label>Select Photo:</label>
+              <input 
+                type="file" 
+                accept="image/*"
+                (change)="onSinglePhotoSelected($event)"
+                #singleInput
+                class="file-input"
+              >
+            </div>
+
+            <button 
+              class="btn btn-primary upload-btn" 
+              (click)="uploadSinglePhoto(singleInput)"
+              [disabled]="!singlePhotoFile() || isUploading()">
+              @if (isUploading()) {
+                <span>Uploading...</span>
+              } @else {
+                <span>📤 Upload Photo</span>
+              }
+            </button>
+          </div>
+        </div>
+
+        <!-- Existing Gallery Images -->
+        <div class="admin-gallery-section">
+          <h3>Manage Single Photos</h3>
+          <div class="admin-gallery-grid">
+            @if (singlePhotos().length === 0) {
+              <div class="empty-state text-center">
+                <p>No single photos found. Upload your first one above!</p>
+              </div>
+            } @else {
+              @for (image of singlePhotos(); track image._id) {
+                <div class="gallery-card">
+                  <div class="gallery-img-container">
+                    <img [src]="image.afterImageUrl" [alt]="image.title" class="gallery-img">
+                  </div>
+                  <div class="gallery-card-footer">
+                    <span class="gallery-title">{{ image.title || 'Untitled' }}</span>
+                    <button class="btn btn-danger btn-sm" (click)="deleteGalleryImage(image._id)">
+                      🗑️ Delete
+                    </button>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- SITE SETTINGS TAB -->
+    @if (activeTab() === 'site-settings') {
+      <div class="admin-tab-content fade-in">
+        <div class="admin-header-actions">
+          <h2>Site Settings</h2>
+        </div>
+
+        <div class="upload-section" style="max-width: 600px;">
+          <h3>YouTube Video Link</h3>
+          <p class="limit-text text-muted" style="margin-bottom:1.5rem;">Update the YouTube video shown in the home page hero section. Paste the full URL.</p>
+          
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">YouTube URL:</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              placeholder="e.g. https://www.youtube.com/watch?v=..."
+              [ngModel]="youtubeUrl()"
+              (ngModelChange)="youtubeUrl.set($event)"
+              style="width: 100%;"
+            >
+          </div>
+
+          <button 
+            class="btn btn-primary upload-btn" 
+            (click)="saveSettings()"
+            [disabled]="isSavingSettings()">
+            @if (isSavingSettings()) {
+              <span>Saving...</span>
+            } @else {
+              <span>💾 Save Settings</span>
+            }
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

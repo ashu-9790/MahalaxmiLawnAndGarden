@@ -1,0 +1,30 @@
+<app-header></app-header>
+<ng-toast></ng-toast>
+<router-outlet></router-outlet>
+@if (!router.url.includes('/admin')) {
+  <app-footer></app-footer>
+}
+
+@if (!router.url.includes('/admin')) {
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/919766924949?text=Hello%20Mahalaxmi%20Lawn%20and%20Garden,%20I%20would%20like%20to%20inquire%20about%20your%20services." 
+     target="_blank" 
+     class="whatsapp-float"
+     data-aos="zoom-in"
+     data-aos-delay="500">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="wa-icon">
+  </a>
+
+  <!-- Floating Contact Form Button -->
+  <button 
+     class="contact-float"
+     (click)="modalService.openContactModal()"
+     data-aos="zoom-in"
+     data-aos-delay="600"
+     title="Send us a message">
+    <span class="contact-float-icon">✉️</span>
+  </button>
+}
+
+<!-- Global Contact Form Modal -->
+<app-contact-modal></app-contact-modal>

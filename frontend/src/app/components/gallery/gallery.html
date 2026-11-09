@@ -1,0 +1,59 @@
+<main class="gallery-page-main fade-in">
+  <!-- Hero Section -->
+  <section class="gallery-hero">
+    <div class="hero-overlay"></div>
+    <div class="container text-center relative z-10">
+      <h1 class="page-title" data-aos="fade-up">{{ ts.t().gallery_title }}</h1>
+      <p class="page-subtitle" data-aos="fade-up" data-aos-delay="100">
+        {{ ts.t().gallery_subtitle }}
+      </p>
+    </div>
+  </section>
+
+  <!-- Gallery Grid -->
+  <section class="gallery-content section-padding">
+    <div class="container">
+      @if (galleryImages().length > 0) {
+        <div class="portfolio-grid">
+          @for (photo of galleryImages(); track photo._id; let i = $index) {
+            <div 
+              class="portfolio-card" 
+              data-aos="fade-up" 
+              [attr.data-aos-delay]="(i % 3) * 100"
+              (click)="openLightbox(photo)">
+              <div class="portfolio-img-wrapper">
+                <img [src]="photo.afterImageUrl" [alt]="photo.title" class="portfolio-img">
+                <div class="portfolio-overlay">
+                  <span class="portfolio-title">{{ photo.title }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-state text-center" data-aos="fade-up">
+          <p>More photos coming soon!</p>
+        </div>
+      }
+    </div>
+  </section>
+</main>
+
+<!-- Lightbox Modal -->
+@if (selectedPhoto()) {
+  <div class="lightbox-overlay" (click)="closeLightbox()">
+    <div class="lightbox-container single-lightbox" (click)="$event.stopPropagation()">
+      <button class="lightbox-close" (click)="closeLightbox()">&times;</button>
+      
+      @if (galleryImages().length > 1) {
+        <button class="lightbox-nav-btn lightbox-prev" (click)="prevPhoto($event)">&#10094;</button>
+        <button class="lightbox-nav-btn lightbox-next" (click)="nextPhoto($event)">&#10095;</button>
+      }
+      
+      <h3 class="lightbox-title">{{ selectedPhoto().title }}</h3>
+      <div class="lightbox-content single-lightbox-content">
+        <img [src]="selectedPhoto().afterImageUrl" [alt]="selectedPhoto().title" class="lightbox-img">
+      </div>
+    </div>
+  </div>
+}

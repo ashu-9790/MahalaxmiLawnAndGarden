@@ -1,0 +1,61 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <span class="lock-icon">🔒</span>
+      <h2>{{ ts.t().admin_login }}</h2>
+      <p class="subtitle">Access the Mahalaxmi Admin Dashboard</p>
+    </div>
+
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input 
+          type="text" 
+          id="username" 
+          name="username" 
+          required
+          placeholder="Enter admin username"
+          [ngModel]="username()" 
+          (ngModelChange)="username.set($event)"
+          #userInput="ngModel">
+        @if (userInput.invalid && (userInput.dirty || userInput.touched)) {
+          <span class="error-text">Username is required</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          required
+          placeholder="Enter admin password"
+          [ngModel]="password()" 
+          (ngModelChange)="password.set($event)"
+          #passInput="ngModel">
+        @if (passInput.invalid && (passInput.dirty || passInput.touched)) {
+          <span class="error-text">Password is required</span>
+        }
+      </div>
+
+      <button 
+        type="submit" 
+        class="login-btn" 
+        [disabled]="loginForm.invalid || isSubmitting()">
+        @if (isSubmitting()) {
+          <span>Logging in...</span>
+        } @else {
+          <span>Login</span>
+        }
+      </button>
+
+      @if (errorMessage()) {
+        <div class="alert alert-error">
+          {{ errorMessage() }}
+        </div>
+      }
+    </form>
+  </div>
+</div>

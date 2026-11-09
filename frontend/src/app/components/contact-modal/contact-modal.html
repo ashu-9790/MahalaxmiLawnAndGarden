@@ -1,0 +1,121 @@
+@if (modalService.isContactModalOpen()) {
+  <div class="lightbox-overlay" (click)="modalService.closeContactModal()">
+    <div class="lightbox-container contact-lightbox fade-in-up" (click)="$event.stopPropagation(); closeDropdown()">
+      <button class="lightbox-close" (click)="modalService.closeContactModal()">&times;</button>
+      
+      <div class="contact-form-card" (click)="closeDropdown()">
+        <h3 class="form-title">{{ ts.t().form_title }}</h3>
+        <p class="text-muted" style="margin-bottom: 1.5rem; font-size: 0.95rem;">
+          {{ ts.t().cta_sub }}
+        </p>
+        
+        <form (ngSubmit)="onSubmit()" #f="ngForm" class="inquiry-form">
+          <div class="form-group">
+            <label for="modal-name">{{ ts.t().form_name }} *</label>
+            <input 
+              type="text" 
+              id="modal-name" 
+              name="name" 
+              required
+              [placeholder]="ts.t().form_name"
+              [ngModel]="name()" 
+              (ngModelChange)="name.set($event)"
+              #nameInput="ngModel">
+            @if (nameInput.invalid && (nameInput.dirty || nameInput.touched)) {
+              <span class="error-text">{{ ts.t().err_name_req }}</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="modal-phone">{{ ts.t().form_phone }} *</label>
+            <input 
+              type="tel" 
+              id="modal-phone" 
+              name="phone" 
+              required
+              pattern="[0-9]{10}"
+              minlength="10"
+              maxlength="10"
+              [placeholder]="ts.t().form_phone"
+              [ngModel]="phone()" 
+              (ngModelChange)="phone.set($event)"
+              #phoneInput="ngModel">
+            @if (phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)) {
+              @if (phoneInput.errors?.['required']) {
+                <span class="error-text">{{ ts.t().err_phone_req }}</span>
+              }
+              @if (phoneInput.errors?.['pattern'] || phoneInput.errors?.['minlength']) {
+                <span class="error-text">{{ ts.t().err_phone_10 }}</span>
+              }
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="modal-email">{{ ts.t().form_email }}</label>
+            <input 
+              type="email" 
+              id="modal-email" 
+              name="email"
+              email
+              [placeholder]="ts.t().form_email"
+              [ngModel]="email()" 
+              (ngModelChange)="email.set($event)"
+              #emailInput="ngModel">
+            @if (emailInput.invalid && (emailInput.dirty || emailInput.touched)) {
+              <span class="error-text">{{ ts.t().err_email_invalid }}</span>
+            }
+          </div>
+
+          <div class="form-group custom-select-group">
+            <label for="modal-serviceType">{{ ts.t().form_service }} *</label>
+            <div class="custom-select-wrapper" (click)="toggleDropdown($event)">
+              <div class="custom-select-trigger" [class.active]="isDropdownOpen()">
+                <span>{{ serviceType() || ts.t().form_service }}</span>
+                <span class="dropdown-arrow"></span>
+              </div>
+              
+              @if (isDropdownOpen()) {
+                <div class="custom-options-container">
+                  @for (service of ts.t().services; track service.id) {
+                    <div 
+                      class="custom-option" 
+                      [class.selected]="serviceType() === service.title"
+                      (click)="selectService(service.title); $event.stopPropagation()">
+                      {{ service.title }}
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+            <input type="hidden" name="serviceType" [ngModel]="serviceType()" required #serviceInput="ngModel">
+            @if (serviceInput.invalid && (serviceInput.dirty || serviceInput.touched)) {
+              <span class="error-text">{{ ts.t().err_service_req }}</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="modal-message">{{ ts.t().form_message }}</label>
+            <textarea 
+              id="modal-message" 
+              name="message" 
+              rows="3"
+              [placeholder]="ts.t().form_message"
+              [ngModel]="message()" 
+              (ngModelChange)="message.set($event)"></textarea>
+          </div>
+
+          <button 
+            type="submit" 
+            class="submit-btn" 
+            [disabled]="f.invalid || isSubmitting()">
+            @if (isSubmitting()) {
+              <span>Submitting...</span>
+            } @else {
+              <span>{{ ts.t().form_submit }}</span>
+            }
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+}
