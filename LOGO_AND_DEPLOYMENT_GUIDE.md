@@ -183,3 +183,4 @@ Place the exported files into:
 - [ ] Test Admin Login at `/login` with seeded credentials.
 - [ ] Test uploading 1 Before & After transformation to verify Cloudinary integration on production.
 - [ ] Verify SSL (HTTPS lock icon) is green on your custom domain.
+
