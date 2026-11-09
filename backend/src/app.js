@@ -33,9 +33,13 @@ app.use('/api/gallery', galleryRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/stats', statsRoutes);
 
-// Health check endpoint
+// Health check & ping endpoints
 app.get('/', (req, res) => {
   res.json({ message: 'Mahalaxmi Lawn and Garden API is running...' });
+});
+
+app.get('/api/ping', (req, res) => {
+  res.status(200).json({ status: 'active', timestamp: new Date().toISOString() });
 });
 
 // Error handling middleware
@@ -51,4 +55,18 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+
+  // Automated Keep-Alive self-ping (every 30 minutes)
+  const renderUrl = process.env.RENDER_EXTERNAL_URL || (process.env.NODE_ENV === 'production' ? 'https://mahalaxmilawnandgarden.onrender.com' : null);
+  if (renderUrl) {
+    const https = require('https');
+    console.log(`[Keep-Alive] Scheduled keep-alive ping for ${renderUrl} every 30 minutes.`);
+    setInterval(() => {
+      https.get(`${renderUrl}/api/ping`, (res) => {
+        console.log(`[Keep-Alive] Pinged ${renderUrl}/api/ping - Status: ${res.statusCode}`);
+      }).on('error', (err) => {
+        console.error('[Keep-Alive] Ping error:', err.message);
+      });
+    }, 30 * 60 * 1000); // Every 30 minutes
+  }
 });

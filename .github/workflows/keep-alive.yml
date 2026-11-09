@@ -1,0 +1,17 @@
+name: Keep Render Backend Awake
+
+on:
+  schedule:
+    # Runs every 30 minutes to ping the Render backend service
+    - cron: '*/30 * * * *'
+  workflow_dispatch: # Allows manual one-click trigger from GitHub Actions tab
+
+jobs:
+  ping-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Backend
+        run: |
+          echo "Pinging Mahalaxmi Render backend (30-minute interval)..."
+          curl -s -f https://mahalaxmilawnandgarden.onrender.com/api/ping || curl -s https://mahalaxmilawnandgarden.onrender.com/
+          echo "Ping completed successfully at $(date)!"
