@@ -1,5 +1,5 @@
 <div class="launch-stage">
-  <!-- Glowing ambient background lights -->
+  <!-- Ambient background lighting -->
   <div class="glow-orb orb-1"></div>
   <div class="glow-orb orb-2"></div>
   <div class="glow-orb orb-3"></div>
@@ -25,29 +25,30 @@
   <div class="launch-card">
     <!-- Brand Crest -->
     <div class="logo-wrapper">
-      <img src="logo.png" alt="MLG Logo" class="launch-logo">
+      <img src="logo.png" alt="Mahalaxmi Lawn & Garden Logo" class="launch-logo">
       <div class="logo-halo"></div>
     </div>
 
-    <!-- Title & Dignitary Dedication -->
-    <div class="badge-ceremony">
-      <span>✨ अधिकृत डिजिटल पदार्पण • Official Launch ✨</span>
+    <!-- Official Launch Pill -->
+    <div class="launch-badge">
+      <span class="badge-dot"></span>
+      <span>Official Digital Launch • 2026</span>
     </div>
 
-    <h1 class="brand-title">महालक्ष्मी लॉन ॲण्ड गार्डन</h1>
-    <p class="brand-sub">Mahalaxmi Lawn & Garden (MLG)</p>
+    <h1 class="brand-title">Mahalaxmi Lawn & Garden</h1>
+    <p class="brand-tagline">Premium Landscaping, Lawn Maintenance & Horticulture Solutions</p>
 
-    <div class="honor-card">
-      <p class="honor-role">वेबसाईट उद्घाटन</p>
-      <p class="honor-name">🌿 श्री मानसिंग पाटील 🌿</p>
-      <p class="honor-title">(निसर्ग प्रेमी & संस्थापक)</p>
+    <div class="founder-card">
+      <span class="founder-role">FOUNDED BY</span>
+      <h3 class="founder-name">Shri Mansing Patil</h3>
+      <span class="founder-desc">Nature Lover & Horticulture Expert</span>
     </div>
 
     <!-- Countdown Display -->
     @if (countdown() !== null) {
       <div class="countdown-display animate-pop">
         <span class="countdown-number">{{ countdown() }}</span>
-        <span class="countdown-label">वेबसाईट सुरू होत आहे...</span>
+        <span class="countdown-label">Taking Your Website Live...</span>
       </div>
     }
 
@@ -55,40 +56,30 @@
     @if (hasLaunched()) {
       <div class="success-banner animate-bounce-in">
         <div class="success-icon">🎉</div>
-        <h2 class="success-title">हार्दिक अभिनंदन!</h2>
-        <p class="success-subtitle">महालक्ष्मी लॉन ॲण्ड गार्डन वेबसाईट आता अधिकृतपणे लाईव्ह झाली आहे!</p>
+        <h2 class="success-title">Congratulations!</h2>
+        <p class="success-subtitle">Mahalaxmi Lawn & Garden is now officially live on the web!</p>
         <div class="loading-redirect">
           <div class="spinner"></div>
-          <span>मुख्य पानावर जात आहोत (Redirecting to Home)...</span>
+          <span>Redirecting to your home page...</span>
         </div>
       </div>
     }
 
-    <!-- The Big Launch Button -->
+    <!-- Grand Launch Action -->
     @if (!isLaunching() && !hasLaunched()) {
-      <div class="ceremonial-ribbon-wrapper">
-        <div class="ribbon-line ribbon-left"></div>
-        <div class="ribbon-seal">
-          <span class="ribbon-icon">✂️</span>
-          <span class="ribbon-text">शुभ उद्घाटन</span>
-        </div>
-        <div class="ribbon-line ribbon-right"></div>
-      </div>
-
       <div class="launch-action">
         <button class="grand-launch-btn" (click)="startLaunch()">
-          <span class="btn-glow"></span>
           <span class="btn-icon">🚀</span>
           <span class="btn-text">
-            <strong>वेबसाईट लाँच करा</strong>
-            <small>CLICK TO LAUNCH WEBSITE</small>
+            <strong>Launch Your Website</strong>
+            <small>CLICK TO TAKE YOUR PLATFORM LIVE</small>
           </span>
         </button>
       </div>
 
       <div class="direct-link">
         <button (click)="skipToHome()" class="skip-btn">
-          थेट होम पेजवर जा (Direct Entry) &rarr;
+          Enter Website Directly &rarr;
         </button>
       </div>
     }
