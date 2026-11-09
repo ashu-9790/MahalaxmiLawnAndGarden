@@ -158,3 +158,4 @@ Once you have your transparent PNG file:
 - **Limit colors to 2 or 3**: Green (`#84B868`), Olive (`#5A8742`), and Amber (`#F0A500`).
 - **High Contrast**: Ensure dark elements are dark enough to read on white or light-green backgrounds.
 - **Check at small size**: Zoom out to 10% in Canva; if you can still recognize the shape, your logo is a winner!
+

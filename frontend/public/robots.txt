@@ -1,0 +1,9 @@
+# Robots.txt for Mahalaxmi Lawn & Garden
+User-agent: *
+Allow: /
+Allow: /gallery
+Disallow: /admin
+Disallow: /login
+
+# Sitemap
+Sitemap: https://mahalaxmilawn.com/sitemap.xml

@@ -13,7 +13,13 @@ import { ModalService } from '../../services/modal.service';
       <div class="nav-container">
         <div class="nav-brand">
           <a routerLink="/" class="logo">
-            <span class="logo-icon">🌿</span>
+            <img 
+              src="logo.png" 
+              alt="MLG Logo" 
+              class="brand-logo-img" 
+              width="48" 
+              height="48"
+              style="width: 48px; height: 48px; min-width: 48px; max-width: 48px; object-fit: contain; border-radius: 50%; display: block;">
             <span class="logo-text">{{ ts.t().title }}</span>
           </a>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -94,6 +100,14 @@ import { ModalService } from '../../services/modal.service';
     .logo-text {
       line-height: 1.2;
     }
+    .brand-logo-img {
+      height: 46px;
+      width: 46px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid var(--color-primary);
+      box-shadow: 0 4px 12px rgba(132, 184, 104, 0.25);
+    }
     .logo-icon {
       font-size: 1.8rem;
     }
@@ -101,6 +115,10 @@ import { ModalService } from '../../services/modal.service';
       .logo {
         font-size: 1.05rem;
         gap: 0.3rem;
+      }
+      .brand-logo-img {
+        height: 36px;
+        width: 36px;
       }
       .logo-icon {
         font-size: 1.4rem;

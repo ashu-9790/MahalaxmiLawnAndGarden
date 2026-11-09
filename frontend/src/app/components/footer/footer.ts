@@ -9,7 +9,7 @@ import { TranslationService } from '../../services/translation.service';
       <div class="container footer-grid">
         <div class="footer-brand">
           <div class="logo">
-            <span class="logo-icon">🌿</span>
+            <img src="logo.png" alt="MLG Logo" class="footer-logo-img" width="46" height="46" style="width: 46px; height: 46px; object-fit: contain; border-radius: 50%; border: 2px solid var(--color-primary);">
             <h3 class="logo-text">{{ ts.t().title }}</h3>
           </div>
           <p class="brand-desc">{{ ts.t().cta_sub }}</p>
