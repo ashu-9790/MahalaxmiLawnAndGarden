@@ -20,9 +20,8 @@ connectDB();
 const app = express();
 
 // Middleware
-const allowedOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:4200';
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? allowedOrigin : '*',
+  origin: true, // Dynamically allows the requesting origin (Vercel, localhost, custom domain)
   credentials: true
 }));
 app.use(express.json());
