@@ -42,6 +42,7 @@ export interface TranslationSchema {
   nav_menu: string;
   gallery_title: string;
   gallery_subtitle: string;
+  gallery_explore_btn: string;
   err_name_req: string;
   err_phone_req: string;
   err_phone_10: string;
@@ -69,8 +70,8 @@ const TRANSLATIONS: Record<'mr' | 'en', TranslationSchema> = {
     form_name: "तुमचे नाव",
     form_phone: "फोन नंबर",
     form_email: "ईमेल (पर्यायी)",
-    btn_watch_video: "बघा आम्ही बगीचे कसे सजवतो 🎬",
-    video_badge: "थेट काम पहा",
+    btn_watch_video: "महालक्ष्मी लॉन आणि गार्डन — खास व्हिडिओ पहा",
+    video_badge: "विशेष व्हिडिओ",
     form_service: "हवी असलेली सेवा निवडा",
     form_message: "संदेश (पर्यायी)",
     form_submit: "चौकशी पाठवा",
@@ -86,6 +87,7 @@ const TRANSLATIONS: Record<'mr' | 'en', TranslationSchema> = {
     nav_menu: "मेनू",
     gallery_title: "फोटो गॅलरी",
     gallery_subtitle: "सुंदर लँडस्केप्स आणि बागेच्या डिझाईन्सचा आमचा पोर्टफोलिओ पहा.",
+    gallery_explore_btn: "आमची संपूर्ण फोटो गॅलरी पहा",
     err_name_req: "नाव आवश्यक आहे",
     err_phone_req: "फोन नंबर आवश्यक आहे",
     err_phone_10: "कृपया बरोबर १० अंक प्रविष्ट करा",
@@ -122,8 +124,8 @@ const TRANSLATIONS: Record<'mr' | 'en', TranslationSchema> = {
     form_name: "Your Name",
     form_phone: "Phone Number",
     form_email: "Email (Optional)",
-    btn_watch_video: "See Our Work in Action — Watch Transformations",
-    video_badge: "1-MIN VIDEO TOUR",
+    btn_watch_video: "Discover What We Do & How We Can Help",
+    video_badge: "FEATURED VIDEO",
     form_service: "Select Required Service",
     form_message: "Message (Optional)",
     form_submit: "Send Inquiry",
@@ -139,6 +141,7 @@ const TRANSLATIONS: Record<'mr' | 'en', TranslationSchema> = {
     nav_menu: "Menu",
     gallery_title: "Photo Gallery",
     gallery_subtitle: "Explore our portfolio of beautiful landscapes and garden designs.",
+    gallery_explore_btn: "Explore Full Photo Gallery",
     err_name_req: "Name is required",
     err_phone_req: "Phone number is required",
     err_phone_10: "Please enter exactly 10 digits",

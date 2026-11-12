@@ -1,6 +1,7 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { TranslationService } from '../../services/translation.service';
 import { ApiService } from '../../services/api.service';
 import { ModalService } from '../../services/modal.service';
@@ -10,7 +11,7 @@ import * as AOS from 'aos';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -35,9 +36,64 @@ export class HomeComponent {
   transformations = computed(() => this.galleryImages().filter(img => img.type === 'transformation'));
   selectedGalleryImage = signal<any | null>(null);
 
+  // Curated showcase photos (shown when database has 0 photos)
+  defaultShowcaseImages = [
+    {
+      _id: 'showcase-1',
+      title: 'Lush Carpet Lawn & Villa Landscaping',
+      tag: 'Lawn Installation',
+      afterImageUrl: 'https://images.unsplash.com/photo-1558904541-efa8c4a08931?auto=format&fit=crop&w=800&q=80',
+      type: 'single'
+    },
+    {
+      _id: 'showcase-2',
+      title: 'Modern Terrace Garden & Pavers',
+      tag: 'Garden Design',
+      afterImageUrl: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80',
+      type: 'single'
+    },
+    {
+      _id: 'showcase-3',
+      title: 'Commercial Landscape & Trimmed Hedges',
+      tag: 'Lawn Maintenance',
+      afterImageUrl: 'https://images.unsplash.com/photo-1598902108854-10e335adac99?auto=format&fit=crop&w=800&q=80',
+      type: 'single'
+    },
+    {
+      _id: 'showcase-4',
+      title: 'Flowering Perennials & Rock Garden',
+      tag: 'Plant Nursery',
+      afterImageUrl: 'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?auto=format&fit=crop&w=800&q=80',
+      type: 'single'
+    },
+    {
+      _id: 'showcase-5',
+      title: 'Residential Backyard Garden Oasis',
+      tag: 'Landscaping',
+      afterImageUrl: 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?auto=format&fit=crop&w=800&q=80',
+      type: 'single'
+    }
+  ];
+
+  displayImages = computed(() => {
+    return this.galleryImages().length > 0 ? this.galleryImages() : this.defaultShowcaseImages;
+  });
+
+  scrollGallery(direction: 'left' | 'right') {
+    const el = document.getElementById('homeGallerySlider');
+    if (el) {
+      const scrollAmount = el.clientWidth * 0.75;
+      el.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+
   // Video State
   youtubeUrl = signal<string | null>(null);
   safeYoutubeUrl = signal<SafeResourceUrl | null>(null);
+  videoTitle = signal<string>('');
   isVideoModalOpen = signal(false);
 
   ngOnInit() {
@@ -56,6 +112,9 @@ export class HomeComponent {
         if (settings.youtubeUrl) {
           this.youtubeUrl.set(settings.youtubeUrl);
           this.formatYoutubeUrl(settings.youtubeUrl);
+        }
+        if (settings.videoTitle) {
+          this.videoTitle.set(settings.videoTitle);
         }
       },
       error: (err) => console.error('Failed to fetch settings', err)

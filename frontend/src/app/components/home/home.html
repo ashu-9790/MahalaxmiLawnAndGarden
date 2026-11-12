@@ -79,36 +79,77 @@
   <!-- Photo Gallery Section -->
   <section id="gallery" class="gallery-section">
     <div class="container">
-      <h2 class="section-title text-center" data-aos="fade-up">Lawns & Gardens Portfolio</h2>
-      <p class="section-subtitle text-center" data-aos="fade-up" data-aos-delay="100">
-        Browse through our recent lawns, gardens, and landscape transformations.
-      </p>
+      <div class="section-header text-center">
+        <span class="gallery-section-badge" data-aos="fade-down">
+          🌱 {{ ts.currentLang() === 'mr' ? 'कामाचे फोटो' : 'FEATURED SHOWCASE' }}
+        </span>
+        <h2 class="section-title text-center" data-aos="fade-up">{{ ts.t().gallery_title }}</h2>
+        <p class="section-subtitle text-center" data-aos="fade-up" data-aos-delay="100">
+          {{ ts.t().gallery_subtitle }}
+        </p>
+      </div>
 
-      @if (transformations().length > 0) {
-        <div class="public-gallery-grid">
-          @for (image of transformations(); track image._id) {
-            <div class="gallery-item dual-public-card" data-aos="zoom-in" data-aos-delay="150" (click)="openLightbox(image)">
-              <div class="dual-public-container">
-                <div class="public-img-half">
-                  <span class="public-img-label">Before</span>
-                  <img [src]="image.beforeImageUrl" alt="Before Transformation" class="gallery-image">
-                </div>
-                <div class="public-img-half">
-                  <span class="public-img-label">After</span>
-                  <img [src]="image.afterImageUrl" alt="After Transformation" class="gallery-image">
+      <!-- Slider Controls Wrapper -->
+      <div class="gallery-slider-outer" data-aos="fade-up" data-aos-delay="150">
+        <button 
+          class="slider-nav-btn slider-nav-prev" 
+          (click)="scrollGallery('left')" 
+          aria-label="Previous Slide">
+          ❮
+        </button>
+        
+        <div class="gallery-slider-track" id="homeGallerySlider">
+          @for (photo of displayImages(); track photo._id; let i = $index) {
+            <div class="slider-card" (click)="openLightbox(photo)">
+              <div class="slider-card-img-box">
+                @if (photo.type === 'transformation' && photo.beforeImageUrl) {
+                  <!-- Dual Comparison Card -->
+                  <div class="slider-dual-img">
+                    <div class="slider-half-img">
+                      <span class="img-badge img-badge-before">Before</span>
+                      <img [src]="photo.beforeImageUrl" alt="Before" loading="lazy">
+                    </div>
+                    <div class="slider-half-img">
+                      <span class="img-badge img-badge-after">After</span>
+                      <img [src]="photo.afterImageUrl" alt="After" loading="lazy">
+                    </div>
+                  </div>
+                } @else {
+                  <!-- Single Photo Card -->
+                  <img [src]="photo.afterImageUrl" [alt]="photo.title" class="slider-single-img" loading="lazy">
+                }
+                
+                <div class="slider-card-overlay">
+                  <span class="zoom-icon">🔍</span>
                 </div>
               </div>
-              <div class="gallery-overlay">
-                <span class="gallery-item-title">{{ image.title }}</span>
+              
+              <div class="slider-card-body">
+                @if (photo.tag) {
+                  <span class="slider-card-tag">{{ photo.tag }}</span>
+                }
+                <h3 class="slider-card-title">{{ photo.title }}</h3>
               </div>
             </div>
           }
         </div>
-      } @else {
-        <div class="empty-gallery text-center" data-aos="fade-up">
-          <p>More beautiful transformations coming soon!</p>
-        </div>
-      }
+
+        <button 
+          class="slider-nav-btn slider-nav-next" 
+          (click)="scrollGallery('right')" 
+          aria-label="Next Slide">
+          ❯
+        </button>
+      </div>
+
+      <!-- Route to Full Gallery Page -->
+      <div class="gallery-cta-wrapper text-center" data-aos="zoom-in" data-aos-delay="200">
+        <a routerLink="/gallery" class="btn-explore-gallery" title="Visit our complete gallery portfolio">
+          <span class="btn-gallery-icon">📸</span>
+          <span>{{ ts.t().gallery_explore_btn }}</span>
+          <span class="btn-gallery-arrow">→</span>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -261,15 +302,23 @@
     <div class="lightbox-container" (click)="$event.stopPropagation()">
       <button class="lightbox-close" (click)="closeLightbox()">&times;</button>
       <h3 class="lightbox-title">{{ selectedGalleryImage().title }}</h3>
-      <div class="lightbox-content dual-public-container">
-        <div class="public-img-half">
-          <span class="public-img-label">Before</span>
-          <img [src]="selectedGalleryImage().beforeImageUrl" alt="Before" class="gallery-image">
-        </div>
-        <div class="public-img-half">
-          <span class="public-img-label">After</span>
-          <img [src]="selectedGalleryImage().afterImageUrl" alt="After" class="gallery-image">
-        </div>
+      <div class="lightbox-content">
+        @if (selectedGalleryImage().beforeImageUrl) {
+          <div class="dual-public-container">
+            <div class="public-img-half">
+              <span class="public-img-label">Before</span>
+              <img [src]="selectedGalleryImage().beforeImageUrl" alt="Before" class="gallery-image">
+            </div>
+            <div class="public-img-half">
+              <span class="public-img-label">After</span>
+              <img [src]="selectedGalleryImage().afterImageUrl" alt="After" class="gallery-image">
+            </div>
+          </div>
+        } @else {
+          <div style="text-align: center; padding: 0.5rem;">
+            <img [src]="selectedGalleryImage().afterImageUrl" [alt]="selectedGalleryImage().title" class="gallery-image" style="max-height: 72vh; width: auto; max-width: 100%; border-radius: 8px; object-fit: contain;">
+          </div>
+        }
       </div>
     </div>
   </div>
