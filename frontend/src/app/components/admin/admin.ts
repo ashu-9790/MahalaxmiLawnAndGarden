@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { NgToastService } from 'ng-angular-popup';
@@ -9,7 +9,7 @@ import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './admin.html',
   styleUrl: './admin.css'
 })
@@ -281,6 +281,7 @@ export class AdminComponent implements OnInit {
 
   logout() {
     this.auth.logout();
-    this.router.navigate(['/']);
+    this.toast.info('You have been logged out.', 'Signed Out', 3000);
+    this.router.navigate(['/login']);
   }
 }

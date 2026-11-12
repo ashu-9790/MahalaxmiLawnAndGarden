@@ -9,12 +9,14 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 1.25rem;
   margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .admin-header h1 {
-  font-size: 2.2rem;
+  font-size: 2rem;
   color: var(--color-primary-dark);
 }
 
@@ -22,21 +24,80 @@
   color: var(--color-text-muted);
 }
 
-.refresh-btn {
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.view-site-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   background-color: white;
   border: 1px solid var(--color-border);
   color: var(--color-primary-dark);
-  padding: 0.6rem 1.2rem;
+  padding: 0.6rem 1.1rem;
   border-radius: 8px;
   font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
   box-shadow: var(--shadow-sm);
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
+}
+
+.view-site-btn:hover {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: white;
+  border: 1px solid var(--color-border);
+  color: var(--color-primary-dark);
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.25s ease;
 }
 
 .refresh-btn:hover {
   background-color: var(--color-primary-light);
   border-color: var(--color-primary);
   transform: translateY(-1px);
+}
+
+.logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #fff5f5;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.25s ease;
+}
+
+.logout-btn:hover {
+  background-color: #e53e3e;
+  border-color: #c53030;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
 }
 
 /* Stats Grid */

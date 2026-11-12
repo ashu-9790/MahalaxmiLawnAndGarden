@@ -2,14 +2,31 @@
   <div class="container">
     <!-- Header -->
     <div class="admin-header">
-      <div>
-        <div>
-          <h1 style="margin: 0; line-height: 1;">Dashboard</h1>
+      <div class="admin-title-area">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <img 
+            src="logo.png" 
+            alt="MLG" 
+            class="admin-logo-img" 
+            width="42" 
+            height="42" 
+            style="width: 42px; height: 42px; border-radius: 50%; object-fit: contain; box-shadow: var(--shadow-sm); display: block;">
+          <div>
+            <h1 style="margin: 0; line-height: 1.1;">Dashboard</h1>
+            <p class="subtitle" style="margin: 0.25rem 0 0 0;">Manage Customer Inquiries & Gallery</p>
+          </div>
         </div>
-        <p class="subtitle">Manage Customer Inquiries & Gallery</p>
       </div>
       <div class="header-actions">
-        <button (click)="fetchInquiries()" class="refresh-btn">🔄 Refresh</button>
+        <a routerLink="/" class="view-site-btn" title="View Public Website">
+          <span>🌐</span> View Site
+        </a>
+        <button (click)="fetchInquiries()" class="refresh-btn" title="Refresh Dashboard Data">
+          <span>🔄</span> Refresh
+        </button>
+        <button (click)="logout()" class="logout-btn" title="Log Out from Admin Dashboard">
+          <span>🚪</span> Logout
+        </button>
       </div>
     </div>
 
