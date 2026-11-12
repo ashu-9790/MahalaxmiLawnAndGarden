@@ -26,6 +26,7 @@ export interface TranslationSchema {
   form_phone: string;
   form_email: string;
   btn_watch_video: string;
+  video_badge: string;
   form_service: string;
   form_message: string;
   form_submit: string;
@@ -68,7 +69,8 @@ const TRANSLATIONS: Record<'mr' | 'en', TranslationSchema> = {
     form_name: "तुमचे नाव",
     form_phone: "फोन नंबर",
     form_email: "ईमेल (पर्यायी)",
-    btn_watch_video: "व्हिडिओ पहा",
+    btn_watch_video: "बघा आम्ही बगीचे कसे सजवतो 🎬",
+    video_badge: "थेट काम पहा",
     form_service: "हवी असलेली सेवा निवडा",
     form_message: "संदेश (पर्यायी)",
     form_submit: "चौकशी पाठवा",
@@ -120,7 +122,8 @@ const TRANSLATIONS: Record<'mr' | 'en', TranslationSchema> = {
     form_name: "Your Name",
     form_phone: "Phone Number",
     form_email: "Email (Optional)",
-    btn_watch_video: "Watch Video",
+    btn_watch_video: "See Our Work in Action — Watch Transformations",
+    video_badge: "1-MIN VIDEO TOUR",
     form_service: "Select Required Service",
     form_message: "Message (Optional)",
     form_submit: "Send Inquiry",
